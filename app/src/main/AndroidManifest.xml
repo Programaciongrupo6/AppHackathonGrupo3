@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VolcanApp">
         <activity
+            android:name=".ReportarEmergencia"
+            android:exported="false" />
+        <activity
+            android:name=".RegistroLugar"
+            android:exported="false" />
+        <activity
             android:name=".MainSplash"
             android:exported="true"
             android:theme="@style/ThemeNoBar">
@@ -22,9 +28,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:label="@string/app_name">
-
-        </activity>
+            android:label="@string/app_name" />
     </application>
 
 </manifest>
