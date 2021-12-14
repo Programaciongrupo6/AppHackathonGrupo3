@@ -1,14 +1,22 @@
 package com.volcanapp.volcanapp.ui.boton_panico;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.volcanapp.volcanapp.Login;
 import com.volcanapp.volcanapp.R;
+import com.volcanapp.volcanapp.ReportarEmergencia;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +33,10 @@ public class BotonPanicoFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    private Button btnShowReportarEmergencia;
+    View view;
 
     public BotonPanicoFragment() {
         // Required empty public constructor
@@ -61,6 +73,34 @@ public class BotonPanicoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_boton_panico, container, false);
+        view= inflater.inflate(R.layout.fragment_boton_panico, container, false);
+        return view;
+    }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init();
+        event();
+    }
+
+
+
+    private void init(){
+        btnShowReportarEmergencia = view.findViewById(R.id.button_showReportarEmergencia);
+
+
+    }
+    private void event(){
+        btnShowReportarEmergencia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowReportarEmergenciaIU();
+            }
+        });
+
+    }
+    private void ShowReportarEmergenciaIU(){
+
+        Intent intent = new Intent(getContext(), ReportarEmergencia.class);
+        startActivity(intent);
     }
 }

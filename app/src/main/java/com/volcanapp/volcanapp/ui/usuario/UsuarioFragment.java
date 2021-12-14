@@ -90,13 +90,13 @@ public class UsuarioFragment extends Fragment {
     private void setup() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            //TV_emailUser.setText(currentUser.getEmail());
+            TV_emailUser.setText(currentUser.getEmail());
         }
     }
 
     private void init(){
         btnLogaut = view.findViewById(R.id.button_logaut);
-        TV_emailUser = view.findViewById(R.id.textView_dataUser);
+        TV_emailUser = view.findViewById(R.id.textView_emailUser);
         mAuth = FirebaseAuth.getInstance();
 
     }
