@@ -18,7 +18,7 @@ public class MainSplash extends AppCompatActivity {
         TimerTask iniciarApp = new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(MainSplash.this, MainActivity.class);
+                Intent intent = new Intent(MainSplash.this, Login.class);
                 startActivity(intent);
                 finish();
             }
