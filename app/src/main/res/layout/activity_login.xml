@@ -7,53 +7,70 @@
     android:background="@drawable/fondovolcan"
     tools:context=".Login">
 
+
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="264dp"
-        android:layout_height="264dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_logo_volcanapp" />
 
-    <Button
-        android:id="@+id/btn_registrarLugar"
-        android:layout_width="304dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="72dp"
-        android:background="#FFC107"
-        android:text="Iniciar Sesión"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="309dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="44dp"
-        android:background="#80FAF5F5"
-        android:hint="Correo Electrónico"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="306dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="44dp"
-        android:background="#80FAF5F5"
-        android:hint="Contraseña"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        <EditText
+            android:id="@+id/editText_login_email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="#80FAF5F5"
+            android:hint="Correo Electrónico"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/editText_login_password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="#80FAF5F5"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            android:textSize="20sp" />
+
+
+        <Button
+            android:id="@+id/button_login"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="50dp"
+            android:text="Iniciar Sesión"
+            android:textColor="@color/verde_oscuro"
+            android:textSize="22sp" />
+
+        <Button
+            android:id="@+id/button_showRegistrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="¿Aun no eres usuario? REGÍSTRATE"
+            android:textColor="@color/verde_oscuro"
+            android:textSize="15sp"
+            android:background="#3CFFFFFF"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
