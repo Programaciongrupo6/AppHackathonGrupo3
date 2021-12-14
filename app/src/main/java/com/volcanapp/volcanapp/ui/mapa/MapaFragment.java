@@ -1,14 +1,35 @@
 package com.volcanapp.volcanapp.ui.mapa;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.volcanapp.volcanapp.R;
+import com.volcanapp.volcanapp.RegistroLugar;
+import com.volcanapp.volcanapp.ReportarEmergencia;
+import com.volcanapp.volcanapp.modelos.FirebaseReference;
+import com.volcanapp.volcanapp.modelos.LugarMonitoreado;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +46,12 @@ public class MapaFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Spinner spinnerLugaresMonitoreados;
+    private FloatingActionButton floatingButtonAddLugarMonitoreado;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private View view;
 
     public MapaFragment() {
         // Required empty public constructor
@@ -61,6 +88,67 @@ public class MapaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mapa, container, false);
+        view = inflater.inflate(R.layout.fragment_mapa, container, false);
+        return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init();
+        event();
+    }
+    private void init(){
+
+
+
+        spinnerLugaresMonitoreados = view.findViewById(R.id.Spinner_lugaresMonitoreados);
+        floatingButtonAddLugarMonitoreado = view.findViewById(R.id.floatingActionButton_addLugarMonitoreado);
+        mAuth = FirebaseAuth.getInstance();
+
+
+        db = FirebaseFirestore.getInstance();
+        loadLuagresMonitoreados();
+
+    }
+    private void loadLuagresMonitoreados(){
+        List <LugarMonitoreado> lugaresMonitoreados = new ArrayList<>();
+        db.collection(FirebaseReference.DB_REFERENCE_LUGARES_MONITOREADOS)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null){
+                            Toast.makeText(getContext(), "FireBase error, "+ error.getMessage(), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        for (DocumentChange dc : value.getDocumentChanges()){
+                            if (dc.getType() == DocumentChange.Type.ADDED){
+
+                                lugaresMonitoreados.add(dc.getDocument().toObject(LugarMonitoreado.class));
+                            }
+
+
+
+
+
+                        }
+
+                    }
+                });
+    }
+    private void event(){
+        floatingButtonAddLugarMonitoreado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowRegistroLugarIU();
+            }
+        });
+
+    }
+    private void ShowRegistroLugarIU(){
+
+        Intent intent = new Intent(getContext(), RegistroLugar.class);
+        startActivity(intent);
+    }
+
 }
