@@ -1,13 +1,21 @@
 package com.volcanapp.volcanapp.ui.usuario;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.volcanapp.volcanapp.Login;
 import com.volcanapp.volcanapp.R;
 
 /**
@@ -25,6 +33,13 @@ public class UsuarioFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private TextView TV_nameUser;
+    private TextView TV_emailUser;
+    private Button btnLogaut;
+    private FirebaseAuth mAuth;
+    private View view;
+
 
     public UsuarioFragment() {
         // Required empty public constructor
@@ -61,6 +76,42 @@ public class UsuarioFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_usuario, container, false);
+        view = inflater.inflate(R.layout.fragment_usuario, container, false);
+        return view;
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init();
+        event();
+        setup();
+    }
+
+    private void setup() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            //TV_emailUser.setText(currentUser.getEmail());
+        }
+    }
+
+    private void init(){
+        btnLogaut = view.findViewById(R.id.button_logaut);
+        TV_emailUser = view.findViewById(R.id.textView_dataUser);
+        mAuth = FirebaseAuth.getInstance();
+
+    }
+    private void event(){
+        btnLogaut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logaut();
+            }
+        });
+
+    }
+    private void logaut(){
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(getContext(), Login.class);
+        startActivity(intent);
     }
 }
