@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="264dp"
-        android:layout_height="264dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -21,12 +21,13 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="241dp"
-        android:layout_height="71dp"
-        android:text="Alerta temprana"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alerta Temprana"
         android:textAlignment="center"
         android:textSize="28sp"
         android:textStyle="bold"
+        android:textColor="@color/verde_oscuro"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

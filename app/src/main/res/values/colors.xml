@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="amarillo_claro">#f6da53</color>
-    <color name="amarillo_ocre">#FFC107</color>
+    <color name="amarillo_ocre">#E5B60D</color>
     <color name="cafe_claro">#704C16</color>
     <color name="cafe_oscuro">#291C08</color>
     <color name="verde_oscuro">#04100D</color>
