@@ -64,7 +64,17 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:cardBackgroundColor="#37FFFFFF"
-            app:cardCornerRadius="30dp"/>
+            app:cardCornerRadius="30dp">
+            <TextView
+                android:id="@+id/textView_alert"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Alerta"
+                android:gravity="center"
+                android:textSize="50sp"
+                android:textColor="#FF0000"/>
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

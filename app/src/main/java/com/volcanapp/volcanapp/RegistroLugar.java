@@ -55,6 +55,7 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
     private Spinner SpinnerLugaresMonitoreados;
     private MapView mapaLugar;
     private Button btnRegistroLugar;
+    private Button btn_registroLugarBack;
     private FirebaseFirestore db;
     private Task<DocumentSnapshot> docRef;
     private GoogleMap mMap;
@@ -89,6 +90,15 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
             public void onClick(View v) {
 
                 registarLugar();
+
+            }
+        });
+
+    btn_registroLugarBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showHomeUI();
 
             }
         });
@@ -166,6 +176,7 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
         SpinnerLugaresMonitoreados = findViewById(R.id.Spinner_lugaresMonitoreados);
         mapaLugar = findViewById(R.id.nav_view);
         btnRegistroLugar = findViewById(R.id.btn_registrarLugar);
+        btn_registroLugarBack = findViewById(R.id.button_registroLugarBack);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         loadLuagresMonitoreados();
