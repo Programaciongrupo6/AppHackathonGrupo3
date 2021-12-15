@@ -4,9 +4,11 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -33,7 +35,7 @@ public class RecomedacionesFragment extends Fragment {
     private String mParam2;
     private View view;
 
-    private int images[] = {R.drawable.texterupcion, R.drawable.erupcion, R.drawable.erupciontext};
+    private int images[] = {R.drawable.avalanchatext, R.drawable.inundaciontext, R.drawable.erupciontext};
 
     public RecomedacionesFragment() {
 
@@ -94,6 +96,11 @@ public class RecomedacionesFragment extends Fragment {
         ImageView imageView = new ImageView(getContext());
         imageView.setBackgroundResource(image);
 
+//        v_flipper.dispatchTouchEvent(MotionEvent.obtain(MotionEvent)){
+//            v_flipper.startFlipping();
+//            v_flipper.setInAnimation(), android.R.anim.slide_in_left;
+//            v_flipper.setOutAnimation(), android.R.anim.slide_out_right;
+//        }
         v_flipper.addView(imageView);
         v_flipper.setFlipInterval(3000);
         v_flipper.setAutoStart(true);
