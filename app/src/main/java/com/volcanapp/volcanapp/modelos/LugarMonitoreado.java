@@ -88,14 +88,6 @@ public class LugarMonitoreado {
 
     @Override
     public String toString() {
-        return
-                "id='" + id + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", descripcion='" + descripcion + '\'' +
-                ", tipo_alarma='" + tipo_alarma + '\'' +
-                ", ultima_actualizacion='" + ultima_actualizacion + '\'' +
-                ", latitud='" + latitud + '\'' +
-                ", longitud='" + longitud + '\'' +
-                '}';
+        return id;
     }
 }

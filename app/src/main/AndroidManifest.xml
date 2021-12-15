@@ -30,6 +30,10 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".mapas.MapsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_maps" />
+        <activity
             android:name=".RegistroUsuario"
             android:exported="false"
             android:theme="@style/ThemeNoBar" />
