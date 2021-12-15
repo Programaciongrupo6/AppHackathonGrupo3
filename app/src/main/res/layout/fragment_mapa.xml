@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
     <Spinner
-        android:id="@+id/Spinner_lugaresMonitoreados"
+        android:id="@+id/Spinner_misLugaresMonitoreados"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="120dp"

@@ -20,11 +20,9 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.volcanapp.volcanapp.R;
 import com.volcanapp.volcanapp.RegistroLugar;
-import com.volcanapp.volcanapp.ReportarEmergencia;
 import com.volcanapp.volcanapp.modelos.FirebaseReference;
 import com.volcanapp.volcanapp.modelos.LugarMonitoreado;
 
@@ -100,12 +98,9 @@ public class MapaFragment extends Fragment {
     }
     private void init(){
 
-
-
-        spinnerLugaresMonitoreados = view.findViewById(R.id.Spinner_lugaresMonitoreados);
+        spinnerLugaresMonitoreados = view.findViewById(R.id.Spinner_misLugaresMonitoreados);
         floatingButtonAddLugarMonitoreado = view.findViewById(R.id.floatingActionButton_addLugarMonitoreado);
         mAuth = FirebaseAuth.getInstance();
-
 
         db = FirebaseFirestore.getInstance();
         loadLuagresMonitoreados();
@@ -121,18 +116,22 @@ public class MapaFragment extends Fragment {
                             Toast.makeText(getContext(), "FireBase error, "+ error.getMessage(), Toast.LENGTH_LONG).show();
                             return;
                         }
+                        /*
                         for (DocumentChange dc : value.getDocumentChanges()){
                             if (dc.getType() == DocumentChange.Type.ADDED){
 
-                                lugaresMonitoreados.add(dc.getDocument().toObject(LugarMonitoreado.class));
+                                String id = dc.getDocument().getId();
+                                String nombre = dc.getDocument().getString("nombre").toString();
+                                lugaresMonitoreados.add(new LugarMonitoreado(id, nombre));
+                                //lugaresMonitoreados.add(dc.getDocument().toObject(LugarMonitoreado.class));
+
                             }
-
-
-
-
-
                         }
+                        ArrayAdapter <LugarMonitoreado> arrayAdapter = new ArrayAdapter<>(getContext(),
+                                android.R.layout.simple_dropdown_item_1line, lugaresMonitoreados);
+                        spinnerLugaresMonitoreados.setAdapter(arrayAdapter);
 
+                         */
                     }
                 });
     }
