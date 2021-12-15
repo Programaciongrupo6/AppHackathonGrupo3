@@ -2,11 +2,15 @@ package com.volcanapp.volcanapp.ui.recomendaciones;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ViewFlipper;
 
 import com.volcanapp.volcanapp.R;
 
@@ -17,6 +21,8 @@ import com.volcanapp.volcanapp.R;
  */
 public class RecomedacionesFragment extends Fragment {
 
+    private ViewFlipper v_flipper;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -25,8 +31,13 @@ public class RecomedacionesFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View view;
+
+    private int images[] = {R.drawable.texterupcion, R.drawable.erupcion, R.drawable.erupciontext};
 
     public RecomedacionesFragment() {
+
+
         // Required empty public constructor
     }
 
@@ -61,6 +72,32 @@ public class RecomedacionesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recomedaciones, container, false);
+        view = inflater.inflate(R.layout.fragment_recomedaciones, container, false);
+        //https://www.youtube.com/watch?v=-pI8ep8HEp8
+        v_flipper = (ViewFlipper) view.findViewById(R.id.v_flipper);
+
+        for (int image: images){
+            System.out.println(image);
+            flipperImages(image);
+        }
+        return view;
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+    }
+
+    public void flipperImages(int image){
+        ImageView imageView = new ImageView(getContext());
+        imageView.setBackgroundResource(image);
+
+        v_flipper.addView(imageView);
+        v_flipper.setFlipInterval(3000);
+        v_flipper.setAutoStart(true);
+        v_flipper.setInAnimation(getContext(), android.R.anim.slide_in_left);
+        v_flipper.setOutAnimation(getContext(), android.R.anim.slide_out_right);
     }
 }
