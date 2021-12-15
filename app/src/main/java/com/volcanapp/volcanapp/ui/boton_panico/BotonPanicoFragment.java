@@ -80,6 +80,8 @@ public class BotonPanicoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         init();
         event();
+
+
     }
 
 

@@ -22,19 +22,31 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.volcanapp.volcanapp.modelos.FirebaseReference;
 import com.volcanapp.volcanapp.modelos.LugarMonitoreado;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RegistroLugar extends FragmentActivity implements OnMapReadyCallback {
     private TextView TV_descripcion;
@@ -50,6 +62,9 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
     private Double latitud = 4.00;
     private Double longitud  = 74.0;
     private String nombre = "Default";
+
+    private FirebaseAuth mAuth;
+    private String idUser="";
 
 
     @Override
@@ -72,9 +87,71 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
         btnRegistroLugar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showHomeUI();
+
+                registarLugar();
+
             }
         });
+    }
+
+    private void registarLugar() {
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null){
+            String email = user.getEmail();
+
+            //https://www.youtube.com/watch?v=oKTfnF6hVV0
+
+            db.collection(FirebaseReference.DB_REFERENCE_USERS)
+                    .whereEqualTo("email", email)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    idUser =document.getId();
+                                    ArrayList listLugares = (ArrayList) document.get("lugares");
+                                    String idLugarSelecionado = SpinnerLugaresMonitoreados.getSelectedItem().toString();
+
+                                    int indice = listLugares.indexOf(idLugarSelecionado);
+                                    if (indice != -1){
+                                        msn("Ya tienes agregado el lugar seleccionado");
+                                    }else{
+                                        listLugares.add(idLugarSelecionado);
+
+                                        //System.out.println(listLugares);
+                                        //System.out.println(document.getId() + " => " + document.getData());
+                                        //System.out.println(idUser);
+
+
+                                        Map<String, Object> data = new HashMap<>();
+                                        data.put("lugares", listLugares);
+
+                                        db.collection(FirebaseReference.DB_REFERENCE_USERS)
+                                                .document(idUser)
+                                                .set(data, SetOptions.merge());
+
+                                        msn("Lugar registrado correctamente");
+                                        showHomeUI();
+                                    }
+
+
+
+                                }
+                            } else {
+                                msn("Error getting documents: "+ task.getException());
+                                return;
+                            }
+                        }
+                    });
+
+
+
+
+        }
+
+
     }
 
     private void showHomeUI() {
@@ -89,6 +166,7 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
         SpinnerLugaresMonitoreados = findViewById(R.id.Spinner_lugaresMonitoreados);
         mapaLugar = findViewById(R.id.nav_view);
         btnRegistroLugar = findViewById(R.id.btn_registrarLugar);
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         loadLuagresMonitoreados();
 
@@ -190,13 +268,6 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
     }
 
 
-    /*
-    @Override
-    public void onMapReady(GoogleMap googleMap, Double latitud, Double logitud, String nombre) {
-
-    }
-
-     */
 
     private void msn(String s) {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
