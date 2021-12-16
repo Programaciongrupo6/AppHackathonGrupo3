@@ -2,11 +2,18 @@ package com.volcanapp.volcanapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,11 +68,13 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
 
     private Double latitud = 4.00;
-    private Double longitud  = 74.0;
+    private Double longitud = 74.0;
     private String nombre = "Default";
 
     private FirebaseAuth mAuth;
-    private String idUser="";
+    private String idUser = "";
+
+    private int GPS_REQUEST_CODE = 9001;
 
 
     @Override
@@ -75,11 +84,33 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
 
         init();
         event();
+        initMap();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.googleMaps1);
         mapFragment.getMapAsync(this);
 
 
+    }
+
+    private void init() {
+        TV_descripcion = findViewById(R.id.tv_descripcion);
+        TV_tipoAlarma = findViewById(R.id.tv_tipoAlarma);
+        TV_ultimaAct = findViewById(R.id.tv_ultimaAct);
+        SpinnerLugaresMonitoreados = findViewById(R.id.Spinner_lugaresMonitoreados);
+        mapaLugar = findViewById(R.id.nav_view);
+        btnRegistroLugar = findViewById(R.id.btn_registrarLugar);
+        btn_registroLugarBack = findViewById(R.id.button_registroLugarBack);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        loadLuagresMonitoreados();
+
+        /*
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(RegistroLugar.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+        }
+
+         */
 
 
     }
@@ -94,7 +125,7 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
             }
         });
 
-    btn_registroLugarBack.setOnClickListener(new View.OnClickListener() {
+        btn_registroLugarBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -107,7 +138,7 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
     private void registarLugar() {
 
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user != null){
+        if (user != null) {
             String email = user.getEmail();
 
             //https://www.youtube.com/watch?v=oKTfnF6hVV0
@@ -120,14 +151,14 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    idUser =document.getId();
+                                    idUser = document.getId();
                                     ArrayList listLugares = (ArrayList) document.get("lugares");
                                     String idLugarSelecionado = SpinnerLugaresMonitoreados.getSelectedItem().toString();
 
                                     int indice = listLugares.indexOf(idLugarSelecionado);
-                                    if (indice != -1){
+                                    if (indice != -1) {
                                         msn("Ya tienes agregado el lugar seleccionado");
-                                    }else{
+                                    } else {
                                         listLugares.add(idLugarSelecionado);
 
                                         //System.out.println(listLugares);
@@ -147,16 +178,13 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
                                     }
 
 
-
                                 }
                             } else {
-                                msn("Error getting documents: "+ task.getException());
+                                msn("Error getting documents: " + task.getException());
                                 return;
                             }
                         }
                     });
-
-
 
 
         }
@@ -169,20 +197,30 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
         startActivity(intent);
     }
 
-    private void init() {
-        TV_descripcion = findViewById(R.id.tv_descripcion);
-        TV_tipoAlarma = findViewById(R.id.tv_tipoAlarma);
-        TV_ultimaAct = findViewById(R.id.tv_ultimaAct);
-        SpinnerLugaresMonitoreados = findViewById(R.id.Spinner_lugaresMonitoreados);
-        mapaLugar = findViewById(R.id.nav_view);
-        btnRegistroLugar = findViewById(R.id.btn_registrarLugar);
-        btn_registroLugarBack = findViewById(R.id.button_registroLugarBack);
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        loadLuagresMonitoreados();
 
+    private void initMap() {
+        if (isGPSenable()) {
 
+        }
+    }
 
+    private boolean isGPSenable() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean providerEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (providerEnable) {
+            return true;
+        } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setTitle("Permiso de GPS")
+                    .setMessage("Se requiere GPS para que esta aplicación funcione, habilite el GPS")
+                    .setPositiveButton("Si", ((dialogInterface, i) -> {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, GPS_REQUEST_CODE);
+                    }))
+                    .setCancelable(false)
+                    .show();
+        }
+        return false;
     }
 
     private void loadLuagresMonitoreados() {
@@ -231,22 +269,22 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
                                             public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
-                                                if (documentSnapshot.exists()){
+                                                if (documentSnapshot.exists()) {
                                                     nombre = documentSnapshot.getString("nombre");
                                                     String descripcion = documentSnapshot.getString("descripcion");
                                                     String tipo_alarma = documentSnapshot.getString("tipo_alarma");
                                                     String ultima_actualizacion = documentSnapshot.getString("ultima_actualizacion");
-                                                     latitud = documentSnapshot.getDouble("latitud");
+                                                    latitud = documentSnapshot.getDouble("latitud");
                                                     longitud = documentSnapshot.getDouble("longitud");
 
-                                                    TV_descripcion.setText("Descripción:\n"+ descripcion);
-                                                    TV_tipoAlarma.setText("Tipo de alarma:\n"+tipo_alarma);
-                                                    TV_ultimaAct.setText("Ultima actualizaci´pon:\n"+ultima_actualizacion);
+                                                    TV_descripcion.setText("Descripción:\n" + descripcion);
+                                                    TV_tipoAlarma.setText("Tipo de alarma:\n" + tipo_alarma);
+                                                    TV_ultimaAct.setText("Ultima actualizaci´pon:\n" + ultima_actualizacion);
                                                     showPoint(latitud, longitud, nombre);
 
 
-                                                }else{
-                                                    msn("Lugar ("+uid+") no encontrado");
+                                                } else {
+                                                    msn("Lugar (" + uid + ") no encontrado");
 
 
                                                 }
@@ -281,7 +319,6 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
     }
 
 
-
     private void msn(String s) {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
@@ -289,10 +326,38 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+            /*
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(latitud, longitud);
         mMap.addMarker(new MarkerOptions().position(sydney).title(nombre));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+             */
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==GPS_REQUEST_CODE){
+            LocationManager locationManager =(LocationManager) getSystemService(LOCATION_SERVICE);
+            boolean providerEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+            if (providerEnable){
+                Toast.makeText(this, "GPS está habilitado", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "GPS no está habilitado", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
