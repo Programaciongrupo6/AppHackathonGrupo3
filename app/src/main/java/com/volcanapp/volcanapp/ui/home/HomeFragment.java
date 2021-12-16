@@ -1,14 +1,28 @@
 package com.volcanapp.volcanapp.ui.home;
 
+import android.app.Notification;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.volcanapp.volcanapp.R;
+import com.volcanapp.volcanapp.modelos.FirebaseReference;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +39,12 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View view;
+    private TextView textViewAlert;
+    private MediaPlayer mp;
+    private Handler handler = new Handler();
+    private int contador = 1;
+    private final int TIEMPO = 2000;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -61,6 +81,64 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        textViewAlert = view.findViewById(R.id.textView_alert);
+        textViewAlert.setVisibility(View.GONE);
+        mp = MediaPlayer.create(getContext(), R.raw.alerta);
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef = database.getReference(FirebaseReference.DB_REFERENCE_ALERT);
+        //Toast.makeText(getContext(), "KEY: " + myRef.getKey(), Toast.LENGTH_SHORT).show();
+
+        // Evento para alarma en tiempo real
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Integer valor = snapshot.getValue(Integer.class);
+                Toast.makeText(getContext(), "Data: " + valor, Toast.LENGTH_SHORT).show();
+                if (valor.equals(1)) {
+                    Toast.makeText(getContext(), "Data: " + valor, Toast.LENGTH_SHORT).show();
+                    textViewAlert.setVisibility(View.VISIBLE);
+
+                    Notification notification=new Notification(android.R.drawable.ic_btn_speak_now,"Hola",100);
+                    notification.sound = Uri.parse("android.resource://" +  "com.volcanapp.volcanapp" + "/" + R.raw.alerta);
+                    notification.defaults = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE;
+
+                    contador = 1;
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            if (contador > 10) {
+                                return;
+                            } else {
+                                mp.start();
+                                contador = contador + 1;
+                            }
+
+                            handler.postDelayed(this, TIEMPO);
+                        }
+
+                    }, TIEMPO);
+
+
+                }else{
+                    textViewAlert.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Erro: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 }

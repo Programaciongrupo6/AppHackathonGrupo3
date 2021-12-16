@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.volcanapp.volcanapp.funciones.ValidacionCampos;
 import com.volcanapp.volcanapp.modelos.FirebaseReference;
 import com.volcanapp.volcanapp.modelos.User;
 
@@ -35,6 +36,7 @@ public class RegistroUsuario extends AppCompatActivity {
     private EditText editTPassPass;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private ValidacionCampos validar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class RegistroUsuario extends AppCompatActivity {
         editTEmail = findViewById(R.id.editText_registroUsuario_correo);
         editTPass= findViewById(R.id.editText_registroUsuario_contraseña);
         editTPassPass= findViewById(R.id.editText_registroUsuario_confirm_pass);
+        validar = new ValidacionCampos();
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -79,25 +82,48 @@ public class RegistroUsuario extends AppCompatActivity {
         if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || passPass.isEmpty()){
             msn("Todos los campos son obligatorios");
         }else{
-            if (pass.equals(passPass)){
-                mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            User user1 = new User(name, email);
-                            saveUserFB(user1);
-                            showHomeUI();
+            if (validar.validateName(name)){
 
-                        } else{
-                            showAlert();
+                if (validar.validateEmail(email)){
+
+                    if (validar.validatePass(pass)){
+
+                        if (pass.equals(passPass)){
+
+
+                            mAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        User user1 = new User(name, email);
+                                        saveUserFB(user1);
+                                        showHomeUI();
+
+                                    } else{
+                                        showAlert();
+                                    }
+                                }
+                            });
+
+                        }else{
+                            showAlertView("Confirmación","Confirmación de contraseña incorrecta");
                         }
+
+
+
+                    }else{
+                        showAlertView("Contraseña","Revisa tu contraseña debe tener mínimo 8 caracteres, incluir símbolos y al menos una mayúsculas y una minúscula");
                     }
-                });
+
+
+                }else{
+                    showAlertView("Correo","Revisa tu correo electrónico debe tener una estructura similar a: ejemplo@ejepmlo.com");
+                }
 
 
             }else{
-                msn("Confirmación de contraseña incorrecta");
+                showAlertView("Nombre","Revisa tu nombre debe tener más de tres caracteres");
             }
         }
         return true;
@@ -136,6 +162,17 @@ public class RegistroUsuario extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Autenticación");
         builder.setMessage("Se ha producido un error autenticando el usuario.");
+        builder.setCancelable(true);
+        builder.setPositiveButton("Aceptar", null);
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    private void showAlertView(String title, String msn){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(msn);
         builder.setCancelable(true);
         builder.setPositiveButton("Aceptar", null);
         AlertDialog alert = builder.create();
