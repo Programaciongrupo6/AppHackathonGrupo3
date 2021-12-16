@@ -40,7 +40,8 @@ public class ValidacionCampos {
 
     public boolean validatePass(String password){
         Boolean validaction =false;
-        Pattern pattern = Pattern.compile("[a-zA-Z0-9]{6,50}");
+        Pattern pattern = Pattern
+                .compile("^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[@#$%^&+=])(?=\\S+$).{8,}$");
         Matcher mat = pattern.matcher(password);
         if (mat.matches()) {
             validaction = true;
