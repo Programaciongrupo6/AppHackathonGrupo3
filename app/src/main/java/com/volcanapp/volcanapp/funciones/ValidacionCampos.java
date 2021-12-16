@@ -41,7 +41,7 @@ public class ValidacionCampos {
     public boolean validatePass(String password){
         Boolean validaction =false;
         Pattern pattern = Pattern
-                .compile("^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[@#$%^&+=])(?=\\S+$).{8,}$");
+                .compile("^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[.@#$%^&+=])(?=\\S+$).{8,}$");
         Matcher mat = pattern.matcher(password);
         if (mat.matches()) {
             validaction = true;
