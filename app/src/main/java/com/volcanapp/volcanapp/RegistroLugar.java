@@ -55,6 +55,7 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
     private Spinner SpinnerLugaresMonitoreados;
     private MapView mapaLugar;
     private Button btnRegistroLugar;
+    private Button btn_registroLugarBack;
     private FirebaseFirestore db;
     private Task<DocumentSnapshot> docRef;
     private GoogleMap mMap;
@@ -89,6 +90,15 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
             public void onClick(View v) {
 
                 registarLugar();
+
+            }
+        });
+
+    btn_registroLugarBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showHomeUI();
 
             }
         });
@@ -166,6 +176,7 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
         SpinnerLugaresMonitoreados = findViewById(R.id.Spinner_lugaresMonitoreados);
         mapaLugar = findViewById(R.id.nav_view);
         btnRegistroLugar = findViewById(R.id.btn_registrarLugar);
+        btn_registroLugarBack = findViewById(R.id.button_registroLugarBack);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         loadLuagresMonitoreados();
@@ -190,12 +201,14 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
 
 
                                 String id = dc.getDocument().getId();
+                                System.out.println(id);
                                 String nombre = dc.getDocument().getString("nombre").toString();
                                 String descripcion = dc.getDocument().getString("descripcion").toString();
                                 String tipo_alarma = dc.getDocument().getString("tipo_alarma").toString();
                                 String ultima_actualizacion = dc.getDocument().getString("ultima_actualizacion").toString();
                                 String latitud = dc.getDocument().getDouble("latitud").toString();
                                 String longitud = dc.getDocument().getDouble("longitud").toString();
+                                System.out.println(id);
 
 
                                 lugaresMonitoreados.add(new LugarMonitoreado(

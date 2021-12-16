@@ -8,6 +8,7 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -43,7 +44,8 @@
             android:theme="@style/ThemeNoBar" />
         <activity
             android:name=".ReportarEmergencia"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/ThemeNoBar"/>
         <activity
             android:name=".RegistroLugar"
             android:exported="false" />
