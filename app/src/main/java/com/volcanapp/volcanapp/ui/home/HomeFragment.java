@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
         myRef = database.getReference(FirebaseReference.DB_REFERENCE_ALERT);
         //Toast.makeText(getContext(), "KEY: " + myRef.getKey(), Toast.LENGTH_SHORT).show();
 
-        // si cambia en fire base se actualiza en tiempo real
+        // Evento para alarma en tiempo real
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
