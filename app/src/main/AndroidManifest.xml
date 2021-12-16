@@ -44,7 +44,8 @@
             android:theme="@style/ThemeNoBar" />
         <activity
             android:name=".ReportarEmergencia"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/ThemeNoBar"/>
         <activity
             android:name=".RegistroLugar"
             android:exported="false" />

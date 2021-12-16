@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment {
     private MediaPlayer mp;
     private Handler handler = new Handler();
     private int contador = 1;
-    private final int TIEMPO = 5000;
+    private final int TIEMPO = 2000;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -103,9 +103,9 @@ public class HomeFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String valor = snapshot.getValue(String.class);
+                Integer valor = snapshot.getValue(Integer.class);
                 Toast.makeText(getContext(), "Data: " + valor, Toast.LENGTH_SHORT).show();
-                if (valor.equals("True")) {
+                if (valor.equals(1)) {
                     Toast.makeText(getContext(), "Data: " + valor, Toast.LENGTH_SHORT).show();
                     textViewAlert.setVisibility(View.VISIBLE);
 
@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment {
                     contador = 1;
                     handler.postDelayed(new Runnable() {
                         public void run() {
-                            if (contador > 5) {
+                            if (contador > 10) {
                                 return;
                             } else {
                                 mp.start();
