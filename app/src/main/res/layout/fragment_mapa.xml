@@ -34,26 +34,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView2"
+
+    <fragment
+        android:id="@+id/googleMaps1"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+        app:layout_constraintTop_toBottomOf="@+id/textView14"
+        android:elevation="2dp" />
 
     <Spinner
-        android:id="@+id/Spinner_lugaresMonitoreados"
+        android:id="@+id/Spinner_misLugaresMonitoreados"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:elevation="3dp"
-        app:layout_constraintEnd_toStartOf="@+id/mapView2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/mapView2"
+        android:layout_marginStart="150dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
 
