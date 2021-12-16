@@ -201,12 +201,14 @@ public class RegistroLugar extends FragmentActivity implements OnMapReadyCallbac
 
 
                                 String id = dc.getDocument().getId();
+                                System.out.println(id);
                                 String nombre = dc.getDocument().getString("nombre").toString();
                                 String descripcion = dc.getDocument().getString("descripcion").toString();
                                 String tipo_alarma = dc.getDocument().getString("tipo_alarma").toString();
                                 String ultima_actualizacion = dc.getDocument().getString("ultima_actualizacion").toString();
                                 String latitud = dc.getDocument().getDouble("latitud").toString();
                                 String longitud = dc.getDocument().getDouble("longitud").toString();
+                                System.out.println(id);
 
 
                                 lugaresMonitoreados.add(new LugarMonitoreado(

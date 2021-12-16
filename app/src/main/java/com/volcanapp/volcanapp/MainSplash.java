@@ -25,6 +25,6 @@ public class MainSplash extends AppCompatActivity {
         };
 
         Timer tiempo = new Timer();
-        tiempo.schedule(iniciarApp,2000);
+        tiempo.schedule(iniciarApp,4000);
     }
 }
